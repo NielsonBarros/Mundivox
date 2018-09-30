@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CopaMundivoxModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Cup">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CupResult">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CupId" Type="int" Nullable="false" />
+    <Property Name="TeamAId" Type="int" Nullable="false" />
+    <Property Name="TeamAGroup" Type="nchar" MaxLength="5" Nullable="false" />
+    <Property Name="TeamAScore" Type="int" />
+    <Property Name="TeambId" Type="int" Nullable="false" />
+    <Property Name="TeamBGroup" Type="nchar" MaxLength="5" Nullable="false" />
+    <Property Name="TeambScore" Type="int" />
+    <Property Name="WinnerId" Type="int" />
+  </EntityType>
+  <EntityType Name="Team">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Group" Type="nchar" MaxLength="5" />
+    <Property Name="CupId" Type="int" Nullable="false" />
+    <Property Name="winner" Type="bit" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="Password" Type="nchar" MaxLength="15" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Cup_ToUser">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="Cup" Type="Self.Cup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Cup">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CupResult_Cup">
+    <End Role="Cup" Type="Self.Cup" Multiplicity="1" />
+    <End Role="CupResult" Type="Self.CupResult" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CupResult">
+        <PropertyRef Name="CupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CupResults_TeamA">
+    <End Role="Team" Type="Self.Team" Multiplicity="1" />
+    <End Role="CupResult" Type="Self.CupResult" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Team">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CupResult">
+        <PropertyRef Name="TeamAId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CupResults_TeamB">
+    <End Role="Team" Type="Self.Team" Multiplicity="1" />
+    <End Role="CupResult" Type="Self.CupResult" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Team">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CupResult">
+        <PropertyRef Name="TeambId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CupResults_Winner">
+    <End Role="Team" Type="Self.Team" Multiplicity="0..1" />
+    <End Role="CupResult" Type="Self.CupResult" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Team">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CupResult">
+        <PropertyRef Name="WinnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Team_Cup">
+    <End Role="Cup" Type="Self.Cup" Multiplicity="1" />
+    <End Role="Team" Type="Self.Team" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Team">
+        <PropertyRef Name="CupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CopaMundivoxModelStoreContainer">
+    <EntitySet Name="Cup" EntityType="Self.Cup" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CupResult" EntityType="Self.CupResult" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Cup_ToUser" Association="Self.FK_Cup_ToUser">
+      <End Role="User" EntitySet="User" />
+      <End Role="Cup" EntitySet="Cup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CupResult_Cup" Association="Self.FK_CupResult_Cup">
+      <End Role="Cup" EntitySet="Cup" />
+      <End Role="CupResult" EntitySet="CupResult" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CupResults_TeamA" Association="Self.FK_CupResults_TeamA">
+      <End Role="Team" EntitySet="Team" />
+      <End Role="CupResult" EntitySet="CupResult" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CupResults_TeamB" Association="Self.FK_CupResults_TeamB">
+      <End Role="Team" EntitySet="Team" />
+      <End Role="CupResult" EntitySet="CupResult" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CupResults_Winner" Association="Self.FK_CupResults_Winner">
+      <End Role="Team" EntitySet="Team" />
+      <End Role="CupResult" EntitySet="CupResult" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Team_Cup" Association="Self.FK_Team_Cup">
+      <End Role="Cup" EntitySet="Cup" />
+      <End Role="Team" EntitySet="Team" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

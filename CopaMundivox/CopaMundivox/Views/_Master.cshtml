@@ -1,0 +1,74 @@
+﻿@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Copa Mundvox</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Copa Mundvox", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    
+                    @if (Session.Count > 0)
+                    {
+                        <li>@Html.ActionLink("Minhas Copas", "Index", "Cup")</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Início", "Index", "Home")</li>
+                    }
+                    <li>@Html.ActionLink("Sobre", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contato", "Contact", "Home")</li>
+                </ul>
+
+                @if (Session.Count > 0)
+                {
+                    using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                @Html.ActionLink("Olá " + Session[0] + "!", "edit", "User", new { id = Session["UserId"] }, htmlAttributes: new { title = "Gerenciar" })
+                            </li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Sair</a></li>
+                        </ul>
+                    }
+                }
+                else
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>@Html.ActionLink("Cadastrar", "Register", "User")</li>
+                        <li>@Html.ActionLink("Entrar", "LogIn", "User")</li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Copa Mundivox</p>
+        </footer>
+    </div>
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

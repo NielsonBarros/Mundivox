@@ -1,0 +1,79 @@
+﻿@model IEnumerable<CopaMundivox.Models.Team>
+
+
+<table class="table">
+    <tr>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.Group)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.winner)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="text-center">
+                @if (item.Group != null)
+                {
+                    switch (item.Group.Substring(0, 2))
+                    {
+                        case "Sf":
+                            @: Semi Final @item.Group.Substring(2, 1)
+                            break;
+                        case "Fn":
+                            @: Final
+                            break;
+                        case "Wi":
+                            @: Campeão
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    @:-
+                }
+
+            </td>
+
+
+            <td class="text-center">
+                @{
+                    bool winner;
+                    string output;
+                    if (bool.TryParse(item.winner.ToString(), out winner))
+                    {
+                        if (winner)
+                        {
+                            output = "Sim";
+                        }
+                        else
+                        {
+                            output = "Não";
+                        }
+                    }
+                    else
+                    {
+                        output = "-";
+                    }
+                }
+                @output
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", "Team", new { id = item.Id }, null) |
+                @Html.ActionLink("Apagar", "Delete", "Team", new { id = item.Id }, null)
+            </td>
+        </tr>
+                    }
+
+</table>

@@ -1,0 +1,185 @@
+﻿@model CopaMundivox.Models.Cup
+@{
+    var team = Model.Team;
+    var cupResult = Model.CupResult;
+}
+<script>
+    $(document).ready(function () {
+        @foreach(var item in cupResult)
+        {
+            @:$("#@item.TeamAGroup").find("p").html("@item.Team.Name");
+                    @:$("#@item.TeamAGroup").find("p").attr("id", "@item.TeamAId");
+
+
+            @:$("#@item.TeamBGroup").find("p").html("@item.Team1.Name");
+                    @:$("#@item.TeamBGroup").find("p").attr("id", "@item.TeambId");
+                }
+
+        @if(cupResult.Count == 2)
+        {
+            @:$("#FnlTA").find("p").html("&nbsp;");
+                    @:$("#FnlTB").find("p").html("&nbsp;");
+                    @:$(".team").removeClass("team");
+                    @:$(".Sf").removeClass("drop");
+                    @:$(".Sf").addClass("drag");
+                    @:$(".Fnl").addClass("drop");
+                    @:$(".Fnl").find("p").addClass("team");
+                } else if(cupResult.Count == 3)
+        {
+            @:$(".team").removeClass("team");
+            @:$(".Fnl").addClass("drag");
+            @:$("#Winne").addClass("drop");
+            @:$("#Winne").find("p").addClass("team");
+            @:$("#Winne").find("p").html("&nbsp;");
+        }
+        //Inicio da sessão do drag e drop
+        $(function () {
+            $(".drag").draggable({
+                containment: "#containment-wrapper",
+                zIndex: 100,
+                helper: "clone",
+                cursor: "move"
+            });
+            $(".drop").droppable({
+                drop: function (event, ui) {
+                    if ($(this).attr("id") == "FnlTA" && ui.draggable[0].attributes["id"].value.substring(0, 3) == "Sf2") {
+                        return false;
+                    }
+                    if ($(this).attr("id") == "FnlTB" && ui.draggable[0].attributes["id"].value.substring(0, 3) == "Sf1") {
+                        return false;
+                    }
+                    $(this)
+                      .find("p")
+                        .html(ui.draggable[0].innerHTML);
+                    $(this)
+                      .find("p").attr("timeid", ui.draggable[0].children[0].id)
+                },
+                revert: true
+            });
+            //Fim do drag drop
+            $("#salvar").click(function () {
+                var arr = {};
+
+                var sender = [];
+                $("#ErroMessage").html("");
+                var result = $(".team").each(function (index) {
+                    console.log(index + ": " + $(this).attr("timeid"));
+                    if ($(this).attr("timeid") != undefined) {
+                        if (sender.findIndex(val => val.teamId == $(this).attr("timeid")) >= 0) {
+                            $("#ErroMessage").html("Um time não pode estar em mais de uma chave.");
+                            return false;
+                        } else {
+                            arr[$(this).attr("timeid")] = [$(this).attr("timeid")];
+                            sender.push({
+                                teamId: $(this).attr("timeid"),
+                                group: $(this).parent().attr("id")
+                            })
+                        }
+                    }
+                    else {
+                        $("#ErroMessage").html("Todos os confrontos da fase devem ser definidos.");
+                    }
+                });
+                if ($("#ErroMessage").html() == "") {
+                    var dataJson = JSON.stringify(sender);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Cup/cupResults',
+                        data: {
+                            teams: dataJson,
+                            cupId: '@Model.Id'
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function (data) {
+                            console('Error' + data);
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<div id="containment-wrapper">
+    @{
+        if (cupResult.Count() == 0)
+        {
+            <div class="row">
+                <div class="col-sm-4"></div>
+                @foreach (var item in team)
+                {
+                    <div class="drag col-sm-1 ui-widget-content text-center"><p id="@item.Id">@item.Name</p></div>
+                }
+                <div class="col-sm-4"></div>
+            </div>
+            <hr />
+
+        }
+    }
+    <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2 ui-widget-header non-Padding text-center">
+            <div id="Sf1TA" class="Sf drop ui-widget-header">
+                <p class="team">&nbsp;</p>
+            </div>
+        </div>
+        <div class="col-xs-1 "></div>
+        <div class="col-xs-2 ui-widget-header non-Padding text-center">
+            <div id="Winne" class="ui-widget-header">
+                <p>Vencedor</p>
+            </div>
+        </div>
+        <div class="col-xs-1 "></div>
+        <div class="col-xs-2 ui-widget-header non-Padding text-center">
+            <div id="Sf2TA" class="Sf drop ui-widget-header">
+                <p class="team">&nbsp;</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 "><p></p></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 "></div>
+        <div class="col-xs-2 ui-widget-header non-Padding text-center">
+            <div id="FnlTA" class="Fnl ui-widget-header">
+                <p>Vencedor Semi-final 1</p>
+            </div>
+        </div>
+        <div class="col-xs-2 ui-widget-header non-Padding text-center">
+            <div id="FnlTB" class="Fnl ui-widget-header">
+                <p>Vencedor Semi-final 2</p>
+            </div>
+        </div>
+        <div class="col-xs-2 "></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 "><p></p></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2 ui-widget-header non-Padding text-center">
+            <div id="Sf1TB" class="Sf drop ui-widget-header">
+                <p class="team">&nbsp;</p>
+            </div>
+        </div>
+        <div class="col-xs-4 text-center">
+            <span id="ErroMessage" class="field-validation-error text-danger" data-valmsg-for="Name" data-valmsg-replace="true"></span>
+        </div>
+        <div class="col-xs-2 ui-widget-header non-Padding text-center">
+            <div id="Sf2TB" class="Sf drop ui-widget-header">
+                <p class="team">&nbsp;</p>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <input type="button" value="Salvar" id="salvar" class="btn btn-default" />
+        </div>
+    </div>
+</div>

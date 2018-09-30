@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CopaMundivoxModelStoreContainer" CdmEntityContainer="CopaEntities">
+    <EntitySetMapping Name="Cup">
+      <EntityTypeMapping TypeName="CopaMundivoxModel.Cup">
+        <MappingFragment StoreEntitySet="Cup">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Team">
+      <EntityTypeMapping TypeName="CopaMundivoxModel.Team">
+        <MappingFragment StoreEntitySet="Team">
+          <ScalarProperty Name="winner" ColumnName="winner" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Group" ColumnName="Group" />
+          <ScalarProperty Name="CupId" ColumnName="CupId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="User">
+      <EntityTypeMapping TypeName="CopaMundivoxModel.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CupResult">
+      <EntityTypeMapping TypeName="CopaMundivoxModel.CupResult">
+        <MappingFragment StoreEntitySet="CupResult">
+          <ScalarProperty Name="TeamBGroup" ColumnName="TeamBGroup" />
+          <ScalarProperty Name="TeamAGroup" ColumnName="TeamAGroup" />
+          <ScalarProperty Name="WinnerId" ColumnName="WinnerId" />
+          <ScalarProperty Name="TeambScore" ColumnName="TeambScore" />
+          <ScalarProperty Name="TeambId" ColumnName="TeambId" />
+          <ScalarProperty Name="TeamAScore" ColumnName="TeamAScore" />
+          <ScalarProperty Name="TeamAId" ColumnName="TeamAId" />
+          <ScalarProperty Name="CupId" ColumnName="CupId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

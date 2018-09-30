@@ -1,0 +1,85 @@
+﻿@model CopaMundivox.Models.Cup
+
+@{
+    ViewBag.Title = "Visualizar Copa";
+    Layout = "~/Views/_Master.cshtml";
+}
+
+<h2>@Html.DisplayFor(model => model.Name)</h2>
+
+<div>
+    <h4>Copa</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Team)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Team.Count)/4
+        </dd>
+
+    </dl>
+</div>
+
+<div id="accordion">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                <h4 class="panel-title">
+                    Chaveamento
+                </h4>
+            </a>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse
+             @if (Model.Team.Count == 4){
+                  @:in
+                } ">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        @{
+                            Html.RenderPartial("_Cup4Teams", Model);
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+       <div class="panel panel-default">
+        <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                <h4 class="panel-title">
+                    Gerenciamento de Times
+                </h4>
+            </a>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse 
+             @if (Model.Team.Count < 4) { 
+                 @:in
+              }">
+            <div class="panel-body">
+                <div class="row ">
+                    <div class="col-sm-12">
+                        @{
+                            Html.RenderPartial("_TeamsList", Model.Team);
+                        }
+                        @if (Model.Team.Count < 4)
+            {
+                            <p>
+                                @Html.ActionLink("Adicionar Time", "Create", "Team", new { CupId = Model.Id }, null)
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Voltar as minhas Copas", "Index")
+</p>
+
